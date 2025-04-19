@@ -6,6 +6,9 @@ import Image from 'next/image';
 
 export default function VocabularyCard({ word, translation, image, language }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [imgSrc, setImgSrc] = useState(
+    image?.startsWith('http') ? image : '/placeholder.jpg'
+  );
 
   const speak = () => {
     if (typeof window === 'undefined') return;
@@ -14,17 +17,25 @@ export default function VocabularyCard({ word, translation, image, language }) {
     utterance.lang = getLanguageCode(language);
     setIsPlaying(true);
     utterance.onend = () => setIsPlaying(false);
+
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   };
 
   const getLanguageCode = (lang) => {
     switch (lang?.toLowerCase()) {
-      case 'spanish': return 'es-ES';
-      case 'french': return 'fr-FR';
-      case 'german': return 'de-DE';
-      case 'italian': return 'it-IT';
-      case 'japanese': return 'ja-JP';
-      default: return 'en-US';
+      case 'portuguese':
+        return 'pt-PT';
+      case 'spanish':
+        return 'es-ES';
+      case 'italian':
+        return 'it-IT';
+      case 'french':
+        return 'fr-FR';
+      case 'german':
+        return 'de-DE';
+      default:
+        return 'en-US';
     }
   };
 
@@ -33,13 +44,15 @@ export default function VocabularyCard({ word, translation, image, language }) {
       className="flex flex-col items-center text-center rounded-3xl p-5 transition duration-300"
       style={{ backgroundColor: '#EDEDED' }}
     >
-      {/* Image with soft shadow */}
+      {/* Image with fallback */}
       <div className="relative w-24 h-24 mb-4 rounded-xl overflow-hidden shadow-[0_2px_6px_rgba(0,0,0,0.08)]">
         <Image
-          src={image || '/placeholder.jpg'}
-          alt={word}
+          src={imgSrc}
+          alt={translation || word || 'Vocabulary image'}
           fill
+          loading="lazy"
           className="object-cover"
+          onError={() => setImgSrc('/placeholder.jpg')}
         />
       </div>
 

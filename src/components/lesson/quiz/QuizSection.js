@@ -74,10 +74,11 @@ export default function QuizSection({ quiz }) {
         question={current.question}
         options={current.options}
         correctAnswer={current.answer}
-        image={current.image}
         onAnswer={handleAnswer}
         disabled={answered}
+        image={current.image}
       />
+
 
       {/* Next / Finish Button */}
       {answered && (

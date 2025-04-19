@@ -6,7 +6,6 @@ import RhymeCard from '../../components/lesson/rhyme/RhymeCard';
 
 const languageOptions = ['Portuguese', 'Spanish', 'Italian', 'French', 'German'];
 
-
 export default function RhymePage() {
   const [theme, setTheme] = useState('');
   const [language, setLanguage] = useState('Spanish');
@@ -19,11 +18,17 @@ export default function RhymePage() {
     setError('');
     setRhymes([]);
 
+    if (!theme.trim()) {
+      setError('Theme is required');
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch('https://lingualoop-backend.onrender.com/api/rhymes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme, language }),
+        body: JSON.stringify({ theme: theme.trim(), language }),
       });
 
       const data = await res.json();
@@ -41,7 +46,7 @@ export default function RhymePage() {
   };
 
   return (
-    <main className="min-h-screen px-6 py-12 bg-[var(--background)] text-[var(--foreground)]">
+    <main className="min-h-screen px-4 md:px-6 py-12 bg-[var(--background)] text-[var(--foreground)]">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -97,12 +102,19 @@ export default function RhymePage() {
         </div>
       </form>
 
-      {rhymes.length > 0 && (
-        <section className="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {rhymes.length > 0 ? (
+        <section className="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3 max-w-5xl mx-auto px-4">
           {rhymes.map((item, i) => (
             <RhymeCard key={i} {...item} />
           ))}
         </section>
+      ) : (
+        !loading &&
+        !error && (
+          <p className="text-center text-sm text-gray-500 mt-12">
+            No rhymes found. Try a different theme!
+          </p>
+        )
       )}
     </main>
   );
