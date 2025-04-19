@@ -17,7 +17,7 @@ export default function QuizPage() {
     setQuiz(null);  // Clear previous quiz while loading
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/quiz', {
+      const res = await fetch('https://lingualoop-backend.onrender.com/api/quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic, level, language }),

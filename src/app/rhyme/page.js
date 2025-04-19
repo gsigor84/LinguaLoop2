@@ -20,7 +20,7 @@ export default function RhymePage() {
     setRhymes([]);
 
     try {
-      const res = await fetch('http://localhost:5000/api/rhymes', {
+      const res = await fetch('https://lingualoop-backend.onrender.com/api/rhymes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ theme, language }),
